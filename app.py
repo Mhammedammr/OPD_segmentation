@@ -17,7 +17,7 @@ if uploaded_file is not None:
     file_extension = uploaded_file.name.split(".")[-1]
 
     if file_extension.lower() == "csv":
-        df = pd.read_csv(uploaded_file)
+        data = pd.read_csv(uploaded_file)
     elif file_extension.lower() in ["xls", "xlsx"]:
         # Read the Excel file
         excel_file = pd.ExcelFile(uploaded_file)
