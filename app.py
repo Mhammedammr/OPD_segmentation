@@ -3,6 +3,7 @@ from src.insight.models import Model
 import pandas as pd
 import numpy as np
 from src.insight import utils
+import os
 
 
 # Streamlit UI
@@ -96,7 +97,7 @@ if uploaded_file is not None:
             contamination = st.slider("Set Contamination Level for Isolation Forest:", 0.01, 0.5, 0.1)
 
         if 'cleaned_df' not in st.session_state:
-            st.session_state['cleaned_df'] = None
+            st.session_state['cleaned_df'] = pd.DataFrame()
             
         if 'outlier_df' not in st.session_state:
             st.session_state['outlier_df'] = pd.DataFrame()
@@ -204,7 +205,7 @@ if uploaded_file is not None:
         config = {"alg": clustering_technique, "model_kw": {}}
         if clustering_technique == "KMeans":
             k_options = list(range(2, 16)) + [(-1, "Auto Select Best K")]
-            k_selection = st.selectbox("Number of Clusters (k):", k_options)
+            k_selection = st.selectbox("Number of Clusters (k):", k_options,)
             
             # Handle auto selection or specific k
             if isinstance(k_selection, tuple):  # Auto select
@@ -220,9 +221,12 @@ if uploaded_file is not None:
         elif clustering_technique == "GMM":
             config['model_kw']['n_components'] = st.slider("Number of Components:", 1, 10, 3)
 
-        # Initialize session state for data_with_clusters
+        # Initialize session state for data_with_clusters, cleaned_df.
         if 'data_with_clusters' not in st.session_state:
             st.session_state['data_with_clusters'] = pd.DataFrame()
+            
+        if 'cleaned_df' not in st.session_state:
+            st.session_state['cleaned_df'] = pd.DataFrame()
 
         # Perform clustering
         if st.session_state['cleaned_df'].shape[1] > 0:
@@ -232,15 +236,15 @@ if uploaded_file is not None:
                 
             if st.session_state['clustering_technique'] == "KMeans":
                 if config['model_kw']['n_clusters'] == 3:
-                    data_with_clusters = utils.Rename_Clusters(data_with_clusters)
+                    data_with_clusters = utils.rename_clusters(data_with_clusters)
             
             if st.session_state['clustering_technique'] == "GMM":
                 if config['model_kw']['n_components'] == 3:
-                    data_with_clusters = utils.Rename_Clusters(data_with_clusters)
+                    data_with_clusters = utils.rename_clusters(data_with_clusters)
             
             if len(df.columns) == 2:
                 st.write("##### Clustering Results:")
-                scatter_plot = utils.Scatter_Plots(data_with_clusters)
+                scatter_plot = utils.scatter_plots(data_with_clusters)
                 # Display the plot in the Streamlit app
                 st.plotly_chart(scatter_plot)
             else:
@@ -249,9 +253,9 @@ if uploaded_file is not None:
                 _df = data_with_clusters[columns_to_include]
                 st.write("Dataset after column exclusion:", _df.head())
                 # Generate the plot
-                if st.button("Plot") and _df.shape[1] == 2:
+                if st.button("Plot") and (_df.shape[1] == 2 or _df.shape[1] == 3):
                     st.write("### Clustering Results:")
-                    scatter_plot = utils.Scatter_Plots(_df)
+                    scatter_plot = utils.scatter_plots(_df)
                     # Display the plot in the Streamlit app
                     st.plotly_chart(scatter_plot)
                 else:
@@ -265,13 +269,35 @@ if uploaded_file is not None:
             st.pyplot(fig)
             
             st.write("#### Description of Features across Clusters")
-            numeric_df = data_with_clusters.select_dtypes(include=[np.number])
+            # numeric_df = data_with_clusters.select_dtypes(include=[np.number])
             descs, name_list = utils.clusters_analysis(data_with_clusters)
             features_names = data_with_clusters.columns
-            for i in range(0, numeric_df.shape[1] - 1):
+            for i in range(0, data_with_clusters.shape[1] - 1):
                 st.text(f"Description of {name_list[i]} across Clusters")
                 st.table(descs[i])
         
-        # Save Clustered Data in excel sheet
+        # Save Clustered Data in Excel sheet
         if st.button("Save Clustered Data"):
-            st.session_state['data_with_clusters'].to_excel('/home/ai/Workspace/AmrJr/OPD_segmentation/data/Data_with_Cluster.xlsx', index=False)
+            if 'data_with_clusters' in st.session_state:
+                # Define a default save directory
+                default_save_dir = os.path.join(os.getcwd(), "data")  # Save in a 'data' folder in the current working directory
+                os.makedirs(default_save_dir, exist_ok=True)  # Create the directory if it doesn't exist
+
+                # Define the default file name
+                default_file_name = "Data_with_Cluster.xlsx"
+                default_save_path = os.path.join(default_save_dir, default_file_name)
+
+                # Allow the user to specify a custom file name
+                custom_file_name = st.text_input("Enter a file name (without extension):", value="Data_with_Cluster")
+                if custom_file_name:
+                    default_file_name = f"{custom_file_name}.xlsx"
+                    default_save_path = os.path.join(default_save_dir, default_file_name)
+
+                # Save the file
+                try:
+                    st.session_state['data_with_clusters'].to_excel(default_save_path, index=False)
+                    st.success(f"Clustered data saved successfully at: {default_save_path}")
+                except Exception as e:
+                    st.error(f"An error occurred while saving the file: {e}")
+            else:
+                st.warning("No clustered data available to save. Please perform clustering first.")

@@ -92,18 +92,18 @@ def missing_adv(_df, cfg):
         return df
 
     elif cfg["clean"] == "Impute with Mean":
-        df = Imputer(df, "mean")
+        df = imputer(df, "mean")
 
     elif cfg["clean"] == "Impute with Median":
-        df = Imputer(df, "median")
+        df = imputer(df, "median")
         
     elif cfg["clean"] == "Impute with Mode":
-        df = Imputer(df, "most_frequent")
+        df = imputer(df, "most_frequent")
 
     return df
 
 
-def Imputer(_df, strategy="mean"):
+def imputer(_df, strategy="mean"):
     """
     Impute missing values using the mean, median and mode tech with numeric features and using mode tech with categorical features.
     
@@ -303,7 +303,7 @@ def clusters_analysis(df_with_cluster):
     return desc, name_list
 
 
-def Scatter_Plots(df):
+def scatter_plots(df):
     """
     Create scatterplot after clustering to visualize the clusters more to the user to take decisions.
     
@@ -325,7 +325,7 @@ def Scatter_Plots(df):
     return fig
 
 
-def Rename_Clusters(df):
+def rename_clusters(df):
     """
     Map cluster names to logical names in case number of cluster is 3 based on the count of samples in the clusters.
     
