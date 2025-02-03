@@ -64,7 +64,7 @@ If needed, you can re-add specific outlier rows to the cleaned dataset:
 
 ## Clustering and Segmentation
 ### 8. Choosing a Clustering Technique
-- Select a clustering technique from the dropdown:
+- Select a clustering technique from the dropdown list:
   - **KMeans**: Requires the number of clusters (**k**). You can choose a specific **k** or let the app automatically select the best **k** using **silhouette analysis**.
   - **DBSCAN**: Requires **epsilon** and **minimum samples** parameters.
   - **GMM**: Requires the number of components (**clusters**).

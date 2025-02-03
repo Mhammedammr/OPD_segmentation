@@ -40,7 +40,6 @@ def descriptive_analysis(df):
         cat_des_analysis = df.describe(include=["object", "category"]).T
     else:
         cat_des_analysis = "No categorical columns in the DataFrame."
-    d_types = pd.DataFrame(df.dtypes, columns=["type"])
     missing_percentage = pd.DataFrame(
         (df.isna().sum() / len(df)) * 100, columns=["missing %"]
     ).round(2)
@@ -50,7 +49,6 @@ def descriptive_analysis(df):
     return (
         num_des_analysis,
         cat_des_analysis,
-        d_types,
         missing_percentage,
         dups_percentage,
         unq_percentage,
@@ -165,7 +163,7 @@ def IF(_df, contamination=None):
         clean_df: DataFrame without outliers.
         outlier_df: DataFrame containing only the outliers.
     """
-    isolation_forest = IsolationForest(contamination=contamination)
+    isolation_forest = IsolationForest(contamination=contamination, random_state=42)
     df = _df.copy()
     numeric_cols = df.select_dtypes(include=np.number).columns
     binary_cols = [col for col in numeric_cols if df[col].nunique() == 2]
@@ -212,14 +210,9 @@ def plot_numeric_features(df):
 
     plots = []
     for col in valid_cols:
-        # Compute statistics
-        skewness = stats.skew(df[col].dropna())
-        _, p_value = stats.normaltest(df[col].dropna())
-
         # Create interactive histogram
         fig = px.histogram(
             df, x=col, nbins=30,
-            title=f"{col} Distribution<br>Skewness: {skewness:.2f}, Normality p-value: {p_value:.4f}",
             color_discrete_sequence=["steelblue"]
         )
 
@@ -249,7 +242,7 @@ def plot_numeric_features(df):
     return plots
 
 
-def cluster_dist(pca_data: pd.DataFrame):
+def cluster_dist(df: pd.DataFrame):
     """
     Distrbution of samples across cluster with percentage.
     
@@ -257,10 +250,10 @@ def cluster_dist(pca_data: pd.DataFrame):
         fig: histogram of the distrbutions.
     """
     cluster_percentage = (
-        pca_data["cluster"].value_counts(normalize=True) * 100
+        df["cluster"].value_counts(normalize=True) * 100
     ).reset_index()
     cluster_percentage.columns = ["Cluster", "Percentage"]
-    cluster_percentage.sort_values(by="Cluster", inplace=True)
+    cluster_percentage.sort_values(by="Percentage", inplace=True)
 
     # Create a horizontal bar plot
     fig, ax = plt.subplots(figsize=(10, 4))
@@ -295,8 +288,10 @@ def clusters_analysis(df_with_cluster):
     
     desc = []
     name_list = []
+    
     # Get the description
     description = df_with_cluster.groupby("cluster").describe()
+        
     for feature in features_names:
         name_list.append(feature)
         desc.append(description[feature])
@@ -313,10 +308,12 @@ def scatter_plots(df):
     coln_1 = df.columns[0]
     coln_2 = df.columns[1]
     
+    cluster_order = df["cluster"].value_counts(normalize=True).sort_values(ascending=True)
     # Create a scatter plot using Plotly Express
     fig = px.scatter(df, x=coln_1, y=coln_2, color="cluster",
                      labels={coln_1: coln_1, coln_2: coln_2},
-                     color_continuous_scale=px.colors.sequential.Plasma)
+                     color_continuous_scale=px.colors.sequential.Plasma,
+                     category_orders={"cluster": cluster_order.to_dict()})
     
     # Update marker size and edge color
     fig.update_traces(marker=dict(size=12, line=dict(width=2, color='DarkSlateGrey')))

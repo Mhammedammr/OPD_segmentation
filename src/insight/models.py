@@ -23,9 +23,9 @@ class Model:
             if self.model_kws.get('n_clusters') == -1:
                 self.algorithm = None  # Will be set after silhouette analysis
             else:
-                self.algorithm = KMeans(**self.model_kws)
+                self.algorithm = KMeans(**self.model_kws, random_state=42)
         elif cfg["alg"] == "DBSCAN":
-            self.algorithm = DBSCAN(**self.model_kws)
+            self.algorithm = DBSCAN(**self.model_kws, )
         elif cfg["alg"] == "GMM":
             self.algorithm = GaussianMixture(**self.model_kws, covariance_type="tied", random_state=42)
         else:
@@ -120,14 +120,6 @@ class Model:
         additional_info = {"best_k": self.best_k} if self.best_k else None
         
         return X_with_clusters, additional_info
-
-    def save_model(self, file_path):
-        with open(file_path, "wb") as f:
-            pickle.dump(self, f)
-
-    def load_model(self, file_path):
-        with open(file_path, "rb") as f:
-            return pickle.load(f)
 
 
 class ForceDenseTransformer:
