@@ -10,7 +10,7 @@ import altair as alt
 # Streamlit UI
 col1, col2, col3 = st.columns([1, 2, 1])  # Center column is wider
 with col2:
-    st.image("assets/imgs/andalusia_logo.png", width=400)
+    st.image("assets/imgs/andalusia_logo.png", width=375)
     
 # st.image("assets/imgs/andalusia_logo.png", width=400)
 st.title("📈 AI-Powered Insights: OPD Data Analysis & Clustering Modeling")
@@ -157,7 +157,7 @@ if uploaded_file is not None:
     back_DF = data.copy()
     
     # Select columns to include
-    st.markdown("### Step 3: Select Fetaures that Most Relevent to the Problam")
+    st.markdown("### Step 3: Select Fetaures For The Clustering")
     columns_to_include = st.multiselect("Select columns to include:", data.columns.tolist())
     df = back_DF[columns_to_include]
     st.write("Dataset after columns inclusion:", df.head())
@@ -198,7 +198,7 @@ if uploaded_file is not None:
             )
 
         with col2:
-            st.image("assets/imgs/outliers.png", use_container_width=True)
+            st.image("assets/imgs/outliers.png", use_column_width=True)
         outlier_handling = st.selectbox(
             "How would you like to handle outliers?",
             ["Don't Remove", "Use IQR", "Use Isolation Forest"],
@@ -212,33 +212,49 @@ if uploaded_file is not None:
             contamination = st.slider("Set Contamination Level for Isolation Forest:", 0.01, 0.5, 0.1)
     
     
-    # Initialize session state for cleaned_df and outlier_df
+    # Initialize session state for cleaned_df, outlier_df, and re_added_rows
     if 'cleaned_df' not in st.session_state:
         st.session_state['cleaned_df'] = pd.DataFrame()
     if 'outlier_df' not in st.session_state:
         st.session_state['outlier_df'] = pd.DataFrame()
+    if 're_added_rows' not in st.session_state:
+        st.session_state['re_added_rows'] = []
+    if 'outlier_params' not in st.session_state:
+        st.session_state['outlier_params'] = {"method": None, "contamination": None}
 
     # Preprocess data
     if st.button("Preprocess Data"):
         df = utils.missing_adv(df, config)
         cleaned_df, outlier_df = utils.remove_outliers(df, method=outlier_handling, iqr_multiplier=iqr_multiplier, contamination=contamination)
+        
+        # Check if outlier handling parameters have changed
+        current_params = {"method": outlier_handling, "contamination": contamination}
+        if current_params != st.session_state['outlier_params']:
+            st.session_state['re_added_rows'] = []  # Reset re-added rows if parameters change
+            st.session_state['outlier_params'] = current_params  # Update stored parameters
+        
         st.session_state['cleaned_df'] = cleaned_df
         st.session_state['outlier_df'] = outlier_df
     
-    st.write("Preprocessed Dataset:", st.session_state['cleaned_df'])
-    st.write("Outlier Dataset:", st.session_state['outlier_df'])
-    
+
     # Re-add outlier rows
     st.markdown("### Step 5: Re-add Outlier Rows")
 
-    if 're_added_rows' not in st.session_state:
-        st.session_state['re_added_rows'] = []
+    # Get the current outlier_df
+    outlier_df = st.session_state['outlier_df']
+
+    # Ensure selected rows exist in the current outlier_df
+    valid_rows = [row for row in st.session_state['re_added_rows'] if row in outlier_df.index]
+    st.session_state['re_added_rows'] = valid_rows
+
+    # Multiselect for re-adding rows
     selected_rows = st.multiselect(
         "Select rows from the outlier dataset to re-add to the cleaned DataFrame:",
-        options=st.session_state['outlier_df'].index.tolist(),
+        options=outlier_df.index.tolist(),
+        default=st.session_state['re_added_rows'],  # Default to previously selected rows
         format_func=lambda x: f"Row {x}"
     )
-    
+
     previously_added = set(st.session_state['re_added_rows'])
     currently_selected = set(selected_rows)
     
@@ -253,11 +269,11 @@ if uploaded_file is not None:
         if rows_to_add or rows_to_remove:
             cleaned_df = st.session_state['cleaned_df'].copy()
             if rows_to_add:
-                rows_to_append = st.session_state['outlier_df'].loc[list(rows_to_add)]
+                rows_to_append = outlier_df.loc[list(rows_to_add)]
                 cleaned_df = pd.concat([cleaned_df, rows_to_append], ignore_index=True)
                 st.success(f"Added {len(rows_to_add)} newly selected row(s).")
             if rows_to_remove:
-                rows_to_remove_data = st.session_state['outlier_df'].loc[list(rows_to_remove)]
+                rows_to_remove_data = outlier_df.loc[list(rows_to_remove)]
                 mask = ~cleaned_df.isin(rows_to_remove_data.to_dict('list')).all(axis=1)
                 cleaned_df = cleaned_df[mask]
                 st.info(f"Removed {len(rows_to_remove)} unselected row(s).")
@@ -273,7 +289,7 @@ if uploaded_file is not None:
     else:
         if previously_added:
             cleaned_df = st.session_state['cleaned_df'].copy()
-            rows_to_remove_data = st.session_state['outlier_df'].loc[list(previously_added)]
+            rows_to_remove_data = outlier_df.loc[list(previously_added)]
             mask = ~cleaned_df.isin(rows_to_remove_data.to_dict('list')).all(axis=1)
             cleaned_df = cleaned_df[mask]
             st.session_state['cleaned_df'] = cleaned_df
@@ -293,46 +309,56 @@ if uploaded_file is not None:
     
     st.markdown("### Step 6: Select Clustering Technique That Best Fit the Data")
     # Choose clustering technique
-    with st.expander("📉 Choose Clustering Technique"):
-        # Create two columns for horizontal alignment
-        st.write(
-                """
-            Chose clustering technique that best fit the assumptions of the problem. Choose from:
-            - **Kmeans**:
-                        Advantage:
-                            •	Relatively simple to implement.
-                            •	Scales to large data sets.
-                            •	Always converges.
-                            •	Allows warm-starting the positions of centroids.
-                            •	Smoothly adapts to new examples.
-                            •	Can be generalized to clusters of different shapes and sizes, such as elliptical clusters.
-                        Disadvantage:
-                            •	k must be chosen manually.
-                            •	Results depend on initial values:
-                            •	Difficulty clustering data of varying sizes and densities without generalization.
-                            •	Difficulty clustering outliers.
-                            •	Difficulty scaling with number of dimensions.
-            - **GMM**:
-                        Advantage:
-                            •	Relatively simple to implement.
-                            •	Scales to large data sets.
-                            •	Always converges.
-                            •	Allows warm-starting the positions of centroids.
-                            •	Smoothly adapts to new examples.
-                            •	Can be generalized to clusters of different shapes and sizes, such as elliptical clusters.
-                        Disadvantage:
-                            •	k must be chosen manually.
-                            •	Results depend on initial values:
-                            •	Difficulty clustering data of varying sizes and densities without generalization.
-                            •	Difficulty clustering outliers.
-                            •	Difficulty scaling with number of dimensions.
-            
-            """
-        )
-        clustering_technique = st.selectbox("Select Clustering Technique:", ["KMeans", "DBSCAN", "GMM"],
-                                            help="Select a Clustering Technique.")
-    
-    
+    with st.expander("📉 Help on chosing the best Clustering Technique"):
+    # Create two columns for layout
+        col1, col2 = st.columns([1, 1])
+
+        with col1:
+            st.markdown("### K-Means Clustering")
+            st.markdown("""
+            **Advantages**:
+            - Simple and fast for large datasets.
+            - Works well for spherical clusters.
+            - Easy to interpret and implement.
+
+            **Disadvantages**:
+            - Requires the number of clusters (`k`) to be specified.
+            - Sensitive to initial centroid placement.
+            - Struggles with non-spherical or overlapping clusters.
+            """)
+
+        with col2:
+            st.markdown("### Gaussian Mixture Models (GMM)")
+            st.markdown("""
+            **Advantages**:
+            - Handles overlapping clusters.
+            - Works well for elliptical or Gaussian-shaped clusters.
+            - Provides probabilistic cluster assignments.
+
+            **Disadvantages**:
+            - Computationally more expensive than K-Means.
+            - Requires the number of components (`n_components`) to be specified.
+            - Sensitive to initialization.
+            """)
+
+        # Key Differences Table
+        st.markdown("### Key Differences")
+        st.markdown("""
+        | **Aspect**              | **K-Means**                          | **GMM**                              |
+        |--------------------------|--------------------------------------|--------------------------------------|
+        | **Cluster Shape**        | Spherical                           | Elliptical or Gaussian               |
+        | **Cluster Overlap**      | No overlap (hard clustering)        | Allows overlap (soft clustering)     |
+        | **Data Distribution**    | No specific distribution assumed    | Assumes Gaussian distribution        |
+        | **Speed**                | Faster                              | Slower                               |
+        | **Use Case**             | Simple, well-separated clusters     | Complex, overlapping clusters        |
+        """)
+
+    # Clustering Technique Selection
+    clustering_technique = st.selectbox(
+        "Select Clustering Technique:",
+        ["KMeans", "GMM"],
+        help="Select a Clustering Technique."
+    )
     config = {"alg": clustering_technique, "model_kw": {}}
     
     if clustering_technique == "KMeans":
@@ -378,7 +404,7 @@ if uploaded_file is not None:
             st.success(f"Best number of clusters (k) identified: {additional_info['best_k']}")
         
         fig = utils.cluster_dist(data_with_clusters)
-        st.pyplot(fig)
+        st.plotly_chart(fig)
         
         st.markdown("### Step 7: Description of Features across Clusters")
         descs, name_list = utils.clusters_analysis(data_with_clusters)

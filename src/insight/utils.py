@@ -11,8 +11,6 @@ from sklearn.metrics import (
 )
 from scipy import stats
 
-import seaborn as sns
-import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -244,32 +242,40 @@ def plot_numeric_features(df):
 
 def cluster_dist(df: pd.DataFrame):
     """
-    Distrbution of samples across cluster with percentage.
+    Distribution of samples across clusters with percentage.
     
     Returns:
-        fig: histogram of the distrbutions.
+        fig: Interactive histogram of the distributions using Plotly.
     """
+    # Calculate cluster percentages
     cluster_percentage = (
         df["cluster"].value_counts(normalize=True) * 100
     ).reset_index()
     cluster_percentage.columns = ["Cluster", "Percentage"]
-    cluster_percentage.sort_values(by="Percentage", inplace=True)
+    cluster_percentage.sort_values(by="Percentage", inplace=True, ascending=False)
 
-    # Create a horizontal bar plot
-    fig, ax = plt.subplots(figsize=(10, 4))
-    sns.barplot(x="Percentage", y="Cluster", data=cluster_percentage, orient="h")
+    # Create an interactive bar plot using Plotly
+    fig = px.bar(
+        cluster_percentage,
+        x="Percentage",
+        y="Cluster",
+        orientation="h",
+        text="Percentage",
+        labels={"Percentage": "Percentage (%)", "Cluster": "Cluster"},
+        title="Distribution Across Clusters",
+    )
 
-    # Adding percentages on the bars
-    for index, value in enumerate(cluster_percentage["Percentage"]):
-        ax.text(value + 0.5, index, f"{value:.2f}%")
+    # Customize the layout
+    fig.update_traces(texttemplate="%{text:.2f}%", textposition="outside")  # Add percentage labels
+    fig.update_layout(
+        xaxis_title="Percentage (%)",
+        yaxis_title="Cluster",
+        xaxis=dict(tickvals=list(range(0, 55, 5))),  # Set x-axis ticks
+        showlegend=False,
+        template="plotly_white",  # Use a clean template
+    )
 
-    plt.title("Distribution Across Clusters", fontsize=14)
-    plt.xticks(ticks=np.arange(0, 50, 5))
-    plt.xlabel("Percentage (%)")
-
-    # Show the plot
     return fig
-
 
 def clusters_analysis(df_with_cluster):
     """
