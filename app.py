@@ -13,7 +13,7 @@ with col2:
     st.image("assets/imgs/andalusia_logo.png", width=375)
     
 # st.image("assets/imgs/andalusia_logo.png", width=400)
-st.title("📈 AI-Powered Insights: OPD Data Analysis & Clustering Modeling")
+st.title("📈 AI-Powered Insights: OPD Data Analysis & Segmentation")
 config = {}
 data = pd.DataFrame()
 
@@ -44,7 +44,6 @@ if uploaded_file is not None:
     st.dataframe(data.head())
     
     num_des_analysis, cat_des_analysis, missing_percentage, dups_percentage, u_cols = utils.descriptive_analysis(data)
-    
     with st.expander("Overview", expanded=True):
         st.write(
             """
@@ -55,7 +54,7 @@ if uploaded_file is not None:
         st.write(
             f"**Number of Rows:** {data.shape[0]} | **Number of Columns:** {data.shape[1]}"
         )
-    
+
     # Numerical Description
     with st.expander("Numerical Description"):
         st.write(
@@ -153,8 +152,9 @@ if uploaded_file is not None:
             .properties(width=800, height=400)
         )
         st.altair_chart(chart, use_container_width=True)
-    
-    back_DF = data.copy()
+        
+    _df = utils.handle_negative(data)
+    back_DF = _df.copy()
     
     # Select columns to include
     st.markdown("### Step 3: Select Fetaures For The Clustering")
@@ -198,7 +198,7 @@ if uploaded_file is not None:
             )
 
         with col2:
-            st.image("assets/imgs/outliers.png", use_column_width=True)
+            st.image("assets/imgs/outliers.png", use_container_width=True)
         outlier_handling = st.selectbox(
             "How would you like to handle outliers?",
             ["Don't Remove", "Use IQR", "Use Isolation Forest"],
@@ -225,6 +225,7 @@ if uploaded_file is not None:
     # Preprocess data
     if st.button("Preprocess Data"):
         df = utils.missing_adv(df, config)
+        
         cleaned_df, outlier_df = utils.remove_outliers(df, method=outlier_handling, iqr_multiplier=iqr_multiplier, contamination=contamination)
         
         # Check if outlier handling parameters have changed
@@ -235,7 +236,14 @@ if uploaded_file is not None:
         
         st.session_state['cleaned_df'] = cleaned_df
         st.session_state['outlier_df'] = outlier_df
-    
+        
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.write("Cleaned Dataframe")
+            st.dataframe(cleaned_df)
+        with col2:
+            st.write("Outlier Dataframe")
+            st.dataframe(outlier_df)
 
     # Re-add outlier rows
     st.markdown("### Step 5: Re-add Outlier Rows")
@@ -309,8 +317,8 @@ if uploaded_file is not None:
     
     st.markdown("### Step 6: Select Clustering Technique That Best Fit the Data")
     # Choose clustering technique
-    with st.expander("📉 Help on chosing the best Clustering Technique"):
-    # Create two columns for layout
+    with st.expander("📖 Help Choose The Best Clustering Technique"):
+        # Create two columns for layout
         col1, col2 = st.columns([1, 1])
 
         with col1:
@@ -338,7 +346,6 @@ if uploaded_file is not None:
             **Disadvantages**:
             - Computationally more expensive than K-Means.
             - Requires the number of components (`n_components`) to be specified.
-            - Sensitive to initialization.
             """)
 
         # Key Differences Table

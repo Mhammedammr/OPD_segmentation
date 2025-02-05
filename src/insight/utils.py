@@ -53,6 +53,22 @@ def descriptive_analysis(df):
     )
 
 
+def handle_negative(df):
+    # Define keywords to check in column names
+    keywords = ["price", "cost", "revenue", "no", "charge"]
+    # Select numerical columns that contain any of the keywords
+    numerical_columns = df.select_dtypes(include=["number"]).columns
+    columns_to_check = [col for col in numerical_columns if any(keyword in col.lower() for keyword in keywords)]
+    
+    # Check for rows where any of the selected columns have negative values
+    rows_with_negatives = (df[columns_to_check] < 0).any(axis=1)
+    
+    # Remove rows with negative values in the selected columns
+    df_cleaned = df[~rows_with_negatives]
+    return df_cleaned
+
+                    
+                    
 def unique_percentage(df):
     """
     Gets unique record percentage in a dataframe's features.
@@ -276,6 +292,7 @@ def cluster_dist(df: pd.DataFrame):
     )
 
     return fig
+
 
 def clusters_analysis(df_with_cluster):
     """
