@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/40d49620c4ae4436b56e257e9e512b58/artifacts
+deleted_time: 1739100175917
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 40d49620c4ae4436b56e257e9e512b58
+run_name: receptive-foal-118
+run_uuid: 40d49620c4ae4436b56e257e9e512b58
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739091842055
+status: 1
+tags: []
+user_id: muhammedamr

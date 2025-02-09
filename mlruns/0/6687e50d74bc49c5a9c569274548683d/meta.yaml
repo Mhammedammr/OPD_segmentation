@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/6687e50d74bc49c5a9c569274548683d/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 6687e50d74bc49c5a9c569274548683d
+run_name: luminous-shrew-599
+run_uuid: 6687e50d74bc49c5a9c569274548683d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739105683969
+status: 1
+tags: []
+user_id: muhammedamr

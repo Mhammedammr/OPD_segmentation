@@ -10,9 +10,14 @@ from sklearn.metrics import (
     davies_bouldin_score,
 )
 from scipy import stats
+from sklearn.preprocessing import StandardScaler
 
 import plotly.express as px
 import plotly.graph_objects as go
+
+import mlflow
+import mlflow.sklearn
+from mlflow.models.signature import infer_signature
 
 
 def descriptive_analysis(df):
@@ -193,7 +198,7 @@ def IF(_df, contamination=None):
     return clean_df, outlier_df
 
 
-def remove_outliers(_df, method=None, iqr_multiplier=None, contamination=None):
+def remove_outliers(_df, config):
     """
     Remove outliers using the selected tech by the user.
     
@@ -201,10 +206,10 @@ def remove_outliers(_df, method=None, iqr_multiplier=None, contamination=None):
         clean_df: DataFrame without outliers.
         outlier_df: DataFrame containing only the outliers.
     """
-    if method == "Use IQR":
-        cleaned_df, outlier_df = IQR(_df, multiplier=iqr_multiplier)
-    elif method == "Use Isolation Forest":
-        cleaned_df, outlier_df = IF(_df, contamination=contamination)
+    if config["outlier"] == "Use IQR":
+        cleaned_df, outlier_df = IQR(_df, multiplier=config["multiplier"])
+    elif config["outlier"] == "Use Isolation Forest":
+        cleaned_df, outlier_df = IF(_df, contamination=config["contamination"])
     else:
         cleaned_df, outlier_df = _df, pd.DataFrame(columns=_df.columns)
         
@@ -363,3 +368,36 @@ def rename_clusters(df):
     df["cluster"] = df["cluster"].map(cluster_mapping)
     
     return df
+
+
+def tracking(df, features, config):
+    df_without_cluster = df.drop(columns=["cluster"])
+    labels = df[["cluster"]]
+
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(df_without_cluster)
+
+    # Compute evaluation metrics
+    silhouette = silhouette_score(X_scaled, labels)
+    davies_bouldin = davies_bouldin_score(X_scaled, labels)
+    calinski_harabasz = calinski_harabasz_score(X_scaled, labels)
+
+    # Log parameters
+    mlflow.log_param("technique", config["alg"])
+
+    if config["alg"] == "KMeans":
+        mlflow.log_param("n_clusters", config["model_kw"]["n_clusters"])
+    elif config["alg"] == "GMM":
+        mlflow.log_param("n_clusters", config["model_kw"]["n_components"])
+    mlflow.log_param("features", features)
+    mlflow.log_param("missing_technique", config["clean"])
+    mlflow.log_param("outlier_tech", config["outlier"])
+
+    if config["contamination"] is not None:
+        mlflow.log_param("contamination", config["contamination"])
+    elif config["multiplier"] == "Use IQR":
+        mlflow.log_param("iqr_multiplier", config["multiplier"])
+    # Log metrics
+    mlflow.log_metric("silhouette_score", silhouette)
+    mlflow.log_metric("davies_bouldin_index", davies_bouldin)
+    mlflow.log_metric("calinski_harabasz_index", calinski_harabasz)

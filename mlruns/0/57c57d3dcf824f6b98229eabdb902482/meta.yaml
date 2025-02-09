@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/57c57d3dcf824f6b98229eabdb902482/artifacts
+deleted_time: 1739101334290
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 57c57d3dcf824f6b98229eabdb902482
+run_name: colorful-loon-992
+run_uuid: 57c57d3dcf824f6b98229eabdb902482
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739100269260
+status: 1
+tags: []
+user_id: muhammedamr

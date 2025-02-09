@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/9d356d5af47a4c4dbb558387f5e52e0b/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 9d356d5af47a4c4dbb558387f5e52e0b
+run_name: painted-grouse-857
+run_uuid: 9d356d5af47a4c4dbb558387f5e52e0b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739107710501
+status: 1
+tags: []
+user_id: muhammedamr

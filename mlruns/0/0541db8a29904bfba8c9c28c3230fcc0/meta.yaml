@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/0541db8a29904bfba8c9c28c3230fcc0/artifacts
+deleted_time: 1739101334289
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 0541db8a29904bfba8c9c28c3230fcc0
+run_name: bedecked-bug-286
+run_uuid: 0541db8a29904bfba8c9c28c3230fcc0
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739100801660
+status: 1
+tags: []
+user_id: muhammedamr

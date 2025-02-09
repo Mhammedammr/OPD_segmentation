@@ -1,0 +1,24 @@
+artifact_path: clustering_model
+flavors:
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+is_signature_from_type_hint: false
+mlflow_version: 2.20.1
+model_size_bytes: 10328
+model_uuid: a1947fb0be384237a2d3faeebb4dfd93
+run_id: bca5d9a9d8404a6c914bf93d2a5defb0
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "Avg No Of Service", "required": true}, {"type":
+    "double", "name": "Charge Per Case", "required": true}]'
+  outputs: null
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-02-09 11:12:24.614922'

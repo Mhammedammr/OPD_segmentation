@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/78c7ebd7112a4b11ae841166f756909f/artifacts
+deleted_time: 1739101334289
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 78c7ebd7112a4b11ae841166f756909f
+run_name: placid-sponge-564
+run_uuid: 78c7ebd7112a4b11ae841166f756909f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739101056269
+status: 1
+tags: []
+user_id: muhammedamr

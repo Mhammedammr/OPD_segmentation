@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/76cec865add34e57b607fd1d6cbb83cc/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 76cec865add34e57b607fd1d6cbb83cc
+run_name: capable-chimp-957
+run_uuid: 76cec865add34e57b607fd1d6cbb83cc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739105855905
+status: 1
+tags: []
+user_id: muhammedamr

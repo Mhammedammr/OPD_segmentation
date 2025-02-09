@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/45816b33848244528b5efef37e30ce5e/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 45816b33848244528b5efef37e30ce5e
+run_name: resilient-fly-976
+run_uuid: 45816b33848244528b5efef37e30ce5e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739105575077
+status: 1
+tags: []
+user_id: muhammedamr

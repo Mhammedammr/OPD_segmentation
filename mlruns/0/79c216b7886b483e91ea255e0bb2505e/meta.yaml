@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/79c216b7886b483e91ea255e0bb2505e/artifacts
+deleted_time: 1739100175912
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 79c216b7886b483e91ea255e0bb2505e
+run_name: auspicious-panda-728
+run_uuid: 79c216b7886b483e91ea255e0bb2505e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739092570100
+status: 1
+tags: []
+user_id: muhammedamr

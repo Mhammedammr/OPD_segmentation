@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/db6136a7167645e2a50d60b09e9a28d5/artifacts
+deleted_time: 1739100175886
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: db6136a7167645e2a50d60b09e9a28d5
+run_name: wise-rat-374
+run_uuid: db6136a7167645e2a50d60b09e9a28d5
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739099563699
+status: 1
+tags: []
+user_id: muhammedamr

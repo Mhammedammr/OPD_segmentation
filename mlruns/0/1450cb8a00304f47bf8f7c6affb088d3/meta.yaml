@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/1450cb8a00304f47bf8f7c6affb088d3/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 1450cb8a00304f47bf8f7c6affb088d3
+run_name: monumental-chimp-605
+run_uuid: 1450cb8a00304f47bf8f7c6affb088d3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739107752124
+status: 1
+tags: []
+user_id: muhammedamr

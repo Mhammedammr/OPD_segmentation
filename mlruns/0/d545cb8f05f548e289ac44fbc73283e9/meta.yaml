@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/d545cb8f05f548e289ac44fbc73283e9/artifacts
+deleted_time: 1739100175919
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: d545cb8f05f548e289ac44fbc73283e9
+run_name: crawling-dove-556
+run_uuid: d545cb8f05f548e289ac44fbc73283e9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739091399572
+status: 1
+tags: []
+user_id: muhammedamr

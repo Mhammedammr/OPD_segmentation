@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/03777e13f5c242b98c41021b670d6fc6/artifacts
+deleted_time: 1739100175906
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 03777e13f5c242b98c41021b670d6fc6
+run_name: painted-lark-375
+run_uuid: 03777e13f5c242b98c41021b670d6fc6
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739093434415
+status: 1
+tags: []
+user_id: muhammedamr

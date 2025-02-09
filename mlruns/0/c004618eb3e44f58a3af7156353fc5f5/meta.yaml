@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/c004618eb3e44f58a3af7156353fc5f5/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: c004618eb3e44f58a3af7156353fc5f5
+run_name: delightful-shrew-772
+run_uuid: c004618eb3e44f58a3af7156353fc5f5
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739105733245
+status: 1
+tags: []
+user_id: muhammedamr

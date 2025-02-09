@@ -1,0 +1,16 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/96b456c81a814074a68a967fd889cc63/artifacts
+deleted_time: 1739100175925
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+run_id: 96b456c81a814074a68a967fd889cc63
+run_name: merciful-midge-778
+run_uuid: 96b456c81a814074a68a967fd889cc63
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739053096924
+status: 1
+tags: []
+user_id: muhammedamr
