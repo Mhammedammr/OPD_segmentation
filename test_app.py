@@ -225,8 +225,7 @@ if uploaded_file is not None:
         st.session_state['outlier_df'] = pd.DataFrame()
     if 're_added_rows' not in st.session_state:
         st.session_state['re_added_rows'] = []
-    if 'outlier_params' not in st.session_state:
-        st.session_state['outlier_params'] = {"method": None, "contamination": None}
+
 
 
     # Preprocess data
@@ -234,23 +233,17 @@ if uploaded_file is not None:
         df = utils.missing_adv(df, st.session_state['config'])
         
         cleaned_df, outlier_df = utils.remove_outliers(df, st.session_state['config'])
-        
-        # Check if outlier handling parameters have changed
-        current_params = {"method": st.session_state['config']["outlier"], "contamination": st.session_state['config']["contamination"]}
-        if current_params != st.session_state['outlier_params']:
-            st.session_state['re_added_rows'] = []  # Reset re-added rows if parameters change
-            st.session_state['outlier_params'] = current_params  # Update stored parameters
-        
+                
         st.session_state['cleaned_df'] = cleaned_df
         st.session_state['outlier_df'] = outlier_df
         
-        col1, col2 = st.columns([1, 1])
-        with col1:
-            st.write("Cleaned Dataframe")
-            st.dataframe(cleaned_df)
-        with col2:
-            st.write("Outlier Dataframe")
-            st.dataframe(outlier_df)
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        st.write("Cleaned Dataframe")
+        st.dataframe(st.session_state['cleaned_df'])
+    with col2:
+        st.write("Outlier Dataframe")
+        st.dataframe(st.session_state['outlier_df'])
 
     # Re-add outlier rows
     st.markdown("### Step 5: Re-add Outlier Rows")
@@ -381,14 +374,14 @@ if uploaded_file is not None:
     
     st.session_state['config']["model_kw"] = {}
     if st.session_state['config']["alg"] == "KMeans":
-        k_options = list(range(2, 16)) + [(-1, "Auto Select Best K")]
-        k_selection = st.selectbox("Number of Clusters (k):", k_options)
+        k_options = list(range(2, 10)) + [(-1, "Auto Select Best K")]
+        k_selection = st.selectbox("Number of Clusters (k):", k_options, 1)
         st.session_state['config']['model_kw']['n_clusters'] = k_selection if not isinstance(k_selection, tuple) else -1
         if isinstance(k_selection, tuple):
             st.info("Silhouette Analysis will automatically select the best number of clusters.")
     
     elif st.session_state['config']["alg"] == "GMM":
-        st.session_state['config']['model_kw']['n_components'] = st.slider("Number of Components:", 1, 10, 3)
+        st.session_state['config']['model_kw']['n_components'] = st.slider("Number of Clusters:", 2, 10, 3)
 
 
 
