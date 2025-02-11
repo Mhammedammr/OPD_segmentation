@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/0f4a51bc8b394db6bf7f5e4766209844/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 0f4a51bc8b394db6bf7f5e4766209844
+run_name: unleashed-shrew-491
+run_uuid: 0f4a51bc8b394db6bf7f5e4766209844
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739257642674
+status: 1
+tags: []
+user_id: ai

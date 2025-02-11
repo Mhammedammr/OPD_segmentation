@@ -5,7 +5,8 @@ import numpy as np
 from src.insight import utils
 import os
 import altair as alt
-
+import io
+from datetime import datetime
 
 # Streamlit UI
 col1, col2, col3 = st.columns([1, 3, 1])  # Center column is wider
@@ -202,8 +203,8 @@ if uploaded_file is not None:
             )
 
         with col2:
-            st.image("assets/imgs/outliers.png", use_column_width=True)
-            # st.image("assets/imgs/outliers.png", use_container_width=True)
+            # st.image("assets/imgs/outliers.png", use_column_width=True)
+            st.image("assets/imgs/outliers.png", use_container_width=True)
         config["outlier"] = st.selectbox(
             "How would you like to handle outliers?",
             ["Don't Remove", "Use IQR", "Use Isolation Forest"],
@@ -213,8 +214,16 @@ if uploaded_file is not None:
         iqr_multiplier, contamination = None, None
         if config["outlier"] == "Use IQR":
             config["multiplier"] = st.slider("Select IQR Multiplier:", 1.0, 3.0, 1.5)
-        if config["outlier"] == "Use Isolation Forest":
+            config["contamination"] = None
+            
+        elif config["outlier"] == "Use Isolation Forest":
             config["contamination"] = st.slider("Set Contamination Level for Isolation Forest:", 0.01, 0.5, 0.1)
+            config["multiplier"] = None
+            
+        else:
+            config["contamination"] = None
+            config["multiplier"] = None
+            
     
     st.session_state['config'] = config
     
@@ -361,8 +370,8 @@ if uploaded_file is not None:
         """)
 
 
-    if 'clustering_technique' not in st.session_state:
-        st.session_state['clustering_technique'] = None
+    if 'data_with_clusters' not in st.session_state:
+        st.session_state['data_with_clusters'] = None
     
     # Clustering Technique Selection
     tech = st.selectbox(
@@ -383,7 +392,8 @@ if uploaded_file is not None:
     elif st.session_state['config']["alg"] == "GMM":
         st.session_state['config']['model_kw']['n_components'] = st.slider("Number of Clusters:", 2, 10, 3)
 
-
+    if 'data_with_clusters' not in st.session_state:
+        st.session_state['data_with_clusters'] = None
 
     # Perform clustering
     if st.session_state['cleaned_df'].shape[1] > 0:
@@ -402,7 +412,7 @@ if uploaded_file is not None:
             columns_to_include = st.multiselect("Select columns to perform 2D scatter plot:", df.columns.tolist())
             columns_to_include.append("cluster")
             _df = data_with_clusters[columns_to_include]
-            st.write("Dataset after column exclusion:", _df.head())
+            st.write("Dataset after column exclusion:", _df.head(2))
             if st.button("Plot") and (_df.shape[1] == 2 or _df.shape[1] == 3):
                 st.write("### Clustering Results:")
                 scatter_plot = utils.scatter_plots(_df)
@@ -423,26 +433,25 @@ if uploaded_file is not None:
             descs[i]["count"] = pd.to_numeric(descs[i]["count"], errors="coerce")
             st.table(descs[i].sort_values(by="count", ascending=True).applymap(lambda x: f"{x:.2f}"))
     
-    # Save Clustered Data
-    if st.button("Save Clustered Data"):
-        if data_with_clusters is not None:
-            default_save_dir = os.path.join(os.getcwd(), "data")
-            os.makedirs(default_save_dir, exist_ok=True)
-            default_file_name = "Data_with_Cluster.xlsx"
-            default_save_path = os.path.join(default_save_dir, default_file_name)
+        st.session_state['data_with_clusters'] = data_with_clusters
+        
+        
+    if st.session_state['data_with_clusters'] is not None:
+        # Convert DataFrame to Excel
+        excel_buffer = io.BytesIO()
+        st.session_state['data_with_clusters'].to_excel(excel_buffer, index=False)
+        excel_buffer.seek(0)
 
-            custom_file_name = st.text_input("Enter a file name (without extension):", value="Data_with_Cluster")
-            if custom_file_name:
-                default_file_name = f"{custom_file_name}.xlsx"
-                default_save_path = os.path.join(default_save_dir, default_file_name)
-
-            try:
-                data_with_clusters.to_excel(default_save_path, index=False)
-                st.success(f"Clustered data saved successfully at: {default_save_path}")
-            except Exception as e:
-                st.error(f"An error occurred while saving the file: {e}")
-        else:
-            st.warning("No clustered data available to save. Please perform clustering first.")
+        # Create download button
+        st.download_button(
+            label="Download Excel File",
+            data=excel_buffer,
+            file_name="Data_with_Cluster.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        
         tech = st.session_state['clustering_technique']
-        utils.tracking(data_with_clusters, features, st.session_state['config'])
+        utils.tracking(st.session_state['data_with_clusters'], features, st.session_state['config'])
+    else:
+        st.warning("No clustered data available to save. Please perform clustering first.")
         

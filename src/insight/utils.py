@@ -395,7 +395,7 @@ def tracking(df, features, config):
 
     if config["contamination"] is not None:
         mlflow.log_param("contamination", config["contamination"])
-    elif config["multiplier"] == "Use IQR":
+    elif config["multiplier"] is not None:
         mlflow.log_param("iqr_multiplier", config["multiplier"])
     # Log metrics
     mlflow.log_metric("silhouette_score", silhouette)

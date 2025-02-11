@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/137cadabdae740d1bc4aad7b10de8a54/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 137cadabdae740d1bc4aad7b10de8a54
+run_name: zealous-mink-246
+run_uuid: 137cadabdae740d1bc4aad7b10de8a54
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739257693233
+status: 1
+tags: []
+user_id: ai

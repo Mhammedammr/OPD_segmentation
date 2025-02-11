@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/cb0d84a195be4791ab5684331698c822/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: cb0d84a195be4791ab5684331698c822
+run_name: exultant-hound-612
+run_uuid: cb0d84a195be4791ab5684331698c822
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739263919693
+status: 1
+tags: []
+user_id: ai

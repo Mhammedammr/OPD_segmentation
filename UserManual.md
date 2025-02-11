@@ -7,7 +7,7 @@ The **OPD Segmentation App** is a user-friendly, web-based application designed 
 - **Data Upload**: Supports **CSV** and **Excel** file formats.
 - **Descriptive Analysis**: Provides insights into numerical and categorical data, missing values, duplicates, and unique values.
 - **Data Preprocessing**: Offers options to handle missing values and outliers.
-- **Clustering Techniques**: Includes **KMeans, DBSCAN,** and **Gaussian Mixture Models (GMM)** for segmentation.
+- **Clustering Techniques**: Includes **KMeans** and **Gaussian Mixture Models (GMM)** for segmentation.
 - **Visualization**: Generates scatter plots and cluster distribution charts for better interpretation.
 - **Export Results**: Allows users to save clustered data for further analysis.
 
@@ -66,7 +66,6 @@ If needed, you can re-add specific outlier rows to the cleaned dataset:
 ### 8. Choosing a Clustering Technique
 - Select a clustering technique from the dropdown list:
   - **KMeans**: Requires the number of clusters (**k**). You can choose a specific **k** or let the app automatically select the best **k** using **silhouette analysis**.
-  - **DBSCAN**: Requires **epsilon** and **minimum samples** parameters.
   - **GMM**: Requires the number of components (**clusters**).
 - Adjust the parameters as needed.
 
@@ -95,3 +94,4 @@ If needed, you can re-add specific outlier rows to the cleaned dataset:
 
 ## Troubleshooting
 - **Unsupported File Format**: Ensure your file is in **CSV** or **Excel** format.
+

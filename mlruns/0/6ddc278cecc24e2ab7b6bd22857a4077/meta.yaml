@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/6ddc278cecc24e2ab7b6bd22857a4077/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 6ddc278cecc24e2ab7b6bd22857a4077
+run_name: zealous-deer-676
+run_uuid: 6ddc278cecc24e2ab7b6bd22857a4077
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739198466812
+status: 1
+tags: []
+user_id: ai

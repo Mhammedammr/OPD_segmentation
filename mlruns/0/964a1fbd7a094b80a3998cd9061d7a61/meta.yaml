@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/964a1fbd7a094b80a3998cd9061d7a61/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 964a1fbd7a094b80a3998cd9061d7a61
+run_name: ambitious-jay-513
+run_uuid: 964a1fbd7a094b80a3998cd9061d7a61
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739262612977
+status: 1
+tags: []
+user_id: ai

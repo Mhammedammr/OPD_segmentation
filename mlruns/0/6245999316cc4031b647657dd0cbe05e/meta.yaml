@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/6245999316cc4031b647657dd0cbe05e/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 6245999316cc4031b647657dd0cbe05e
+run_name: overjoyed-jay-861
+run_uuid: 6245999316cc4031b647657dd0cbe05e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739199073776
+status: 1
+tags: []
+user_id: ai
