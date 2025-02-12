@@ -52,10 +52,10 @@ testing = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=utils"
-testpaths = [
-    "tests",
-]
+addopts = "--cov=insight"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
 
 [tool.mypy]
 mypy_path = "src"
