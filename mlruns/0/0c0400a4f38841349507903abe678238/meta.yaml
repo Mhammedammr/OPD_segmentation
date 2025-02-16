@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/0c0400a4f38841349507903abe678238/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 0c0400a4f38841349507903abe678238
+run_name: youthful-fowl-788
+run_uuid: 0c0400a4f38841349507903abe678238
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739363696924
+status: 1
+tags: []
+user_id: ai

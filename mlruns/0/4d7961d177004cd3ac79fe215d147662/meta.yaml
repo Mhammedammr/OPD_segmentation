@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/4d7961d177004cd3ac79fe215d147662/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4d7961d177004cd3ac79fe215d147662
+run_name: exultant-dove-39
+run_uuid: 4d7961d177004cd3ac79fe215d147662
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739446583295
+status: 1
+tags: []
+user_id: ai

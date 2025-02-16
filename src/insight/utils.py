@@ -10,7 +10,7 @@ from sklearn.metrics import (
     davies_bouldin_score,
 )
 from scipy import stats
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 import plotly.express as px
 import plotly.graph_objects as go
@@ -32,6 +32,9 @@ def descriptive_analysis(df):
         dups_percentage: duplicate records perc.
         unq_percentage: unique values perc for each feature.
     """
+    if len(df) == 0:
+        raise ValueError("The DataFrame is completly empty.")
+
     categorical_columns = df.select_dtypes(include=["object", "category"]).columns
     numerical_columns = df.select_dtypes(include=["number"]).columns
     
@@ -59,18 +62,17 @@ def descriptive_analysis(df):
 
 
 def handle_negative(df):
-    # Define keywords to check in column names
-    keywords = ["price", "cost", "revenue", "no", "charge"]
-    # Select numerical columns that contain any of the keywords
-    numerical_columns = df.select_dtypes(include=["number"]).columns
-    columns_to_check = [col for col in numerical_columns if any(keyword in col.lower() for keyword in keywords)]
-    
-    # Check for rows where any of the selected columns have negative values
-    rows_with_negatives = (df[columns_to_check] < 0).any(axis=1)
-    
-    # Remove rows with negative values in the selected columns
-    df_cleaned = df[~rows_with_negatives]
-    return df_cleaned
+    categorical_columns = df.select_dtypes(include=["object", "category"]).columns
+    if len(categorical_columns) == 0:
+        # Check for rows where any of the selected columns have negative values
+        rows_with_negatives = (df < 0).any(axis=1)
+        
+        # Remove rows with negative values in the selected columns
+        df_cleaned = df[~rows_with_negatives]
+        return df_cleaned
+
+    else:
+        raise ValueError("can not remove negative values from categorical columns, please select numeric columns")
 
                     
                     
@@ -105,6 +107,7 @@ def missing_adv(_df, cfg):
     df = _df.copy()
 
     if cfg["clean"] == "Remove Missing Data":
+        df.replace({"None": np.nan}, inplace=True)
         df.dropna(inplace=True)
         return df
 
@@ -129,9 +132,11 @@ def imputer(_df, strategy="mean"):
     """
     df = _df.copy()  # Avoid modifying the original dataframe
 
+    df.replace({"None": np.nan}, inplace=True)
+    
     numeric_features = df.select_dtypes(include=np.number).columns
     categorical_features = df.select_dtypes(include=object).columns
-
+    
     # Handle empty categorical columns
     if len(categorical_features) > 0:
         categorical_imputer = SimpleImputer(strategy="most_frequent")
@@ -370,25 +375,20 @@ def rename_clusters(df):
     return df
 
 
-def tracking(df, features, config):
-    df_without_cluster = df.drop(columns=["cluster"])
-    labels = df[["cluster"]]
-
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(df_without_cluster)
-
+def tracking(features, config, metrics):
     # Compute evaluation metrics
-    silhouette = silhouette_score(X_scaled, labels)
-    davies_bouldin = davies_bouldin_score(X_scaled, labels)
-    calinski_harabasz = calinski_harabasz_score(X_scaled, labels)
+    silhouette = metrics["silhouette_score"]
+    davies_bouldin = metrics["davies_bouldin_index"]
+    calinski_harabasz = metrics["calinski_harabasz_index"]
 
     # Log parameters
     mlflow.log_param("technique", config["alg"])
-
+    
     if config["alg"] == "KMeans":
         mlflow.log_param("n_clusters", config["model_kw"]["n_clusters"])
     elif config["alg"] == "GMM":
         mlflow.log_param("n_clusters", config["model_kw"]["n_components"])
+    
     mlflow.log_param("features", features)
     mlflow.log_param("missing_technique", config["clean"])
     mlflow.log_param("outlier_tech", config["outlier"])
@@ -397,6 +397,7 @@ def tracking(df, features, config):
         mlflow.log_param("contamination", config["contamination"])
     elif config["multiplier"] is not None:
         mlflow.log_param("iqr_multiplier", config["multiplier"])
+
     # Log metrics
     mlflow.log_metric("silhouette_score", silhouette)
     mlflow.log_metric("davies_bouldin_index", davies_bouldin)

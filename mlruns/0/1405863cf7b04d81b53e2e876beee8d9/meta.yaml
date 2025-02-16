@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/1405863cf7b04d81b53e2e876beee8d9/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 1405863cf7b04d81b53e2e876beee8d9
+run_name: zealous-donkey-290
+run_uuid: 1405863cf7b04d81b53e2e876beee8d9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739363700301
+status: 1
+tags: []
+user_id: ai
