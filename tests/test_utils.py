@@ -1,21 +1,38 @@
 import pytest
 import pandas as pd
 import numpy as np
+from sklearn.ensemble import IsolationForest
 from insight.utils import (
     descriptive_analysis,
     handle_negative,
     missing_adv,
-   imputer
+    imputer,
+    IQR,
+    IF,
+    remove_outliers
 )
 
-# ✅ FIXTURE: Reusable sample DataFrame for tests
+# ==========================================================================================
+# ✅ FIXTURES: Reusable DataFrames for Tests
+# ==========================================================================================
 @pytest.fixture
 def sample_df():
+    """Fixture for a sample DataFrame with missing values."""
     return pd.DataFrame({
-        "age": [20, None, 40, None, 60],  # Numeric column with missing values
-        "salary": [3000, 6000, None, 12000, None],  # Numeric column with missing values
-        "gender": ["M", None, "M", "F", None],  # Categorical column with missing values
+        "age": [20, None, 40, None, 60],
+        "salary": [3000, 6000, None, 12000, None],
+        "gender": ["M", None, "M", "F", None],
     })
+
+@pytest.fixture
+def sample_outlier_df():
+    """Fixture for a sample DataFrame with numerical outliers."""
+    return pd.DataFrame({
+        "age": [20, 22, 24, 200, 25, 21, 23, 210],  # 200, 210 are outliers
+        "salary": [3000, 3200, 3400, 50000, 3600, 3100, 3300, 52000],  # 50000, 52000 are outliers
+        "gender": ["M", "F", "M", "M", "F", "F", "M", "F"],
+    })
+
 
 # ✅ TEST CLASS FOR descriptive_analysis()
 class TestDescriptiveAnalysis:
@@ -204,3 +221,111 @@ class TestImputer:
         with pytest.raises(ValueError, match="Cannot impute an empty DataFrame"):
             imputer(df)
 
+
+# ✅ TEST CLASS FOR IQR METHOD
+class TestIQR:
+    # ✅ Test 1: Removing Outliers with IQR
+    def test_iqr_removal(self, sample_outlier_df):
+        clean_df, outlier_df = IQR(sample_outlier_df, multiplier=1.5)
+
+        # Outliers should be removed
+        assert 200 not in clean_df["age"].values
+        assert 210 not in clean_df["age"].values
+        assert 50000 not in clean_df["salary"].values
+        assert 52000 not in clean_df["salary"].values
+
+        # Outlier DataFrame should contain only outliers
+        assert all(outlier_df["age"].isin([200, 210]))
+        assert all(outlier_df["salary"].isin([50000, 52000]))
+
+    # ✅ Test 2: No Outliers Present
+    def test_no_outliers(self):
+        df = pd.DataFrame({"age": [20, 22, 24, 25, 21, 23]})
+        clean_df, outlier_df = IQR(df, multiplier=1.5)
+        assert clean_df.equals(df)  # Should be unchanged
+        assert outlier_df.empty  # No outliers
+
+
+
+    # ✅ Test 3: Empty DataFrame
+    def test_empty_dataframe(self):
+        df = pd.DataFrame()
+        clean_df, outlier_df = IQR(df, multiplier=1.5)
+        assert clean_df.empty
+        assert outlier_df.empty
+
+    # ✅ Test 5: Binary Column Ignored
+    def test_binary_column_ignored(self):
+        df = pd.DataFrame({"binary_col": [0, 1, 1, 0, 1, 0, 1, 1]})
+        clean_df, outlier_df = IQR(df, multiplier=1.5)
+        assert clean_df.equals(df)  # Binary columns shouldn't be treated as outliers
+        assert outlier_df.empty
+
+    # ✅ Test 6: Invalid Multiplier
+    def test_invalid_multiplier(self, sample_df):
+        with pytest.raises(TypeError):
+            IQR(sample_df, multiplier="wrong_type")  # Should raise an error
+
+
+# ✅ TEST CLASS FOR ISOLATION FOREST METHOD
+class TestIF:
+    # ✅ Test 1: Removing Outliers with Isolation Forest
+    def test_if_removal(self, sample_outlier_df):
+        clean_df, outlier_df = IF(sample_outlier_df, contamination=0.25)
+
+        # Ensure outliers are removed
+        assert 200 not in clean_df["age"].values
+        assert 210 not in clean_df["age"].values
+        assert 50000 not in clean_df["salary"].values
+        assert 52000 not in clean_df["salary"].values
+
+    
+
+    # ✅ Test 3: Empty DataFrame
+    def test_empty_dataframe(self):
+        df = pd.DataFrame()
+        clean_df, outlier_df = IF(df, contamination=0.25)
+        assert clean_df.empty
+        assert outlier_df.empty
+
+    # ✅ Test 4: Invalid Contamination
+    def test_invalid_contamination(self, sample_df):
+        with pytest.raises(ValueError):
+            IF(sample_df, contamination=-0.5)  # Should raise an error
+
+
+# ✅ TEST CLASS FOR remove_outliers()
+class TestRemoveOutliers:
+    # ✅ Test 1: Using IQR
+    def test_remove_outliers_iqr(self, sample_outlier_df):
+        config = {"outlier": "Use IQR", "multiplier": 1.5}
+        clean_df, outlier_df = remove_outliers(sample_outlier_df, config)
+
+        assert 200 not in clean_df["age"].values
+        assert 210 not in clean_df["age"].values
+        assert 50000 not in clean_df["salary"].values
+        assert 52000 not in clean_df["salary"].values
+
+    # ✅ Test 2: Using Isolation Forest
+    def test_remove_outliers_if(self, sample_outlier_df):
+        config = {"outlier": "Use Isolation Forest", "contamination": 0.25}
+        clean_df, outlier_df = remove_outliers(sample_outlier_df, config)
+
+        assert 200 not in clean_df["age"].values
+        assert 210 not in clean_df["age"].values
+        assert 50000 not in clean_df["salary"].values
+        assert 52000 not in clean_df["salary"].values
+
+    # ✅ Test 3: No Outliers, Should Remain Unchanged
+    def test_remove_outliers_no_outliers(self):
+        df = pd.DataFrame({"age": [20, 22, 24, 25, 21, 23]})
+        config = {"outlier": "Use IQR", "multiplier": 1.5}
+        clean_df, outlier_df = remove_outliers(df, config)
+        assert clean_df.equals(df)
+        assert outlier_df.empty
+
+    # ✅ Test 4: Invalid Config Option
+    def test_invalid_config_option(self, sample_outlier_df):
+        config = {"outlier": "Unknown Method"}
+        with pytest.raises(ValueError):
+            remove_outliers(sample_outlier_df, config)
