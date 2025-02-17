@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/ae3dae67dd0e47f2a77bd64b3a1b6d7c/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: ae3dae67dd0e47f2a77bd64b3a1b6d7c
+run_name: stylish-rat-590
+run_uuid: ae3dae67dd0e47f2a77bd64b3a1b6d7c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739363597024
+status: 1
+tags: []
+user_id: ai

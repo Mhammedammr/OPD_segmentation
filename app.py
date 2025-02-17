@@ -6,7 +6,6 @@ from src.insight import utils
 import os
 import altair as alt
 import io
-from datetime import datetime
 
 # Streamlit UI
 col1, col2, col3 = st.columns([1, 3, 1])  # Center column is wider
@@ -37,6 +36,7 @@ if uploaded_file is not None:
             selected_sheet = st.selectbox("Select a sheet", sheet_names)
             data = pd.read_excel(uploaded_file, sheet_name=selected_sheet)
     else:
+        st.error("Unsupported file format. Please upload a CSV or Excel file.", icon="🚨")
         raise ValueError("Unsupported file format. Please upload a CSV or Excel file.")
     
     # Data Preview
@@ -44,7 +44,12 @@ if uploaded_file is not None:
     st.write("Here is a preview of your uploaded data:")
     st.dataframe(data.head())
     
-    num_des_analysis, cat_des_analysis, missing_percentage, dups_percentage, u_cols = utils.descriptive_analysis(data)
+    if len(data) != 0:
+        num_des_analysis, cat_des_analysis, missing_percentage, dups_percentage, u_cols = utils.descriptive_analysis(data)
+    else:
+        st.error("The DataFrame is compeltly empty.", icon="🚨",)
+        raise ValueError("The DataFrame is compeltly empty.")
+        
     with st.expander("Overview", expanded=True):
         st.write(
             """
@@ -154,14 +159,24 @@ if uploaded_file is not None:
         )
         st.altair_chart(chart, use_container_width=True)
         
-    _df = utils.handle_negative(data)
-    back_DF = _df.copy()
+    # _df = utils.handle_negative(data)
+    back_DF = data.copy()
+    
+    
+    # Select columns tht logically can not contain negative values.
+    st.markdown("### Step 3: Please select the features (columns) that should not contain negative values for clustering analysis")
+    columns_to_include = st.multiselect("Select columns to include:", data.columns.tolist(), key="neg_feature_selector")
+    features = columns_to_include
+    _df = back_DF[columns_to_include]
+    _df = utils.handle_negative(_df)
+    st.write("Preview of the dataset after feature selection and cleaning:", _df.head())
+    
     
     # Select columns to include
-    st.markdown("### Step 3: Select Fetaures For The Clustering")
-    columns_to_include = st.multiselect("Select columns to include:", data.columns.tolist())
+    st.markdown("### Step 4: Select Fetaures For The Clustering")
+    columns_to_include = st.multiselect("Select columns to include:", data.columns.tolist(), key="feature_selector")
     features = columns_to_include
-    df = back_DF[columns_to_include]
+    df = _df[columns_to_include]
     st.write("Dataset after columns inclusion:", df.head())
     
     
@@ -177,7 +192,7 @@ if uploaded_file is not None:
         st.session_state['config'] = {}
     
     # Data Preprocessing
-    st.markdown("### Step 4: Data Preprocessing")
+    st.markdown("### Step 5: Data Preprocessing")
     with st.expander(" :broom: Handle Missing Data"):
         clean = st.selectbox(
             "Choose how to handle missing data:",
@@ -255,7 +270,7 @@ if uploaded_file is not None:
         st.dataframe(st.session_state['outlier_df'])
 
     # Re-add outlier rows
-    st.markdown("### Step 5: Re-add Outlier Rows")
+    st.markdown("### Step 6: Re-add Outlier Rows")
 
     # Get the current outlier_df
     outlier_df = st.session_state['outlier_df']
@@ -324,7 +339,7 @@ if uploaded_file is not None:
             st.plotly_chart(dist_plot)
     
     
-    st.markdown("### Step 6: Select Clustering Technique That Best Fit the Data")
+    st.markdown("### Step 7: Select Clustering Technique That Best Fit the Data")
     # Choose clustering technique
     with st.expander("📖 Help Choose The Best Clustering Technique"):
         # Create two columns for layout
@@ -394,13 +409,14 @@ if uploaded_file is not None:
 
     if 'data_with_clusters' not in st.session_state:
         st.session_state['data_with_clusters'] = None
+        
 
     # Perform clustering
     if st.session_state['cleaned_df'].shape[1] > 0:
         model = Model(st.session_state['config'])
         model.train(st.session_state['cleaned_df'])
         data_with_clusters, additional_info = model.process_cluster(st.session_state['cleaned_df'])
-        
+        metrics = model.evaluate_clustering(st.session_state['cleaned_df'])
         if st.session_state['config']["alg"] in ["KMeans", "GMM"] and st.session_state['config']['model_kw'].get('n_clusters', st.session_state['config']['model_kw'].get('n_components')) == 3:
             data_with_clusters = utils.rename_clusters(data_with_clusters)
         
@@ -426,9 +442,10 @@ if uploaded_file is not None:
         fig = utils.cluster_dist(data_with_clusters)
         st.plotly_chart(fig)
         
-        st.markdown("### Step 7: Description of Features across Clusters")
+        st.markdown("### Step 8: Description of Features across Clusters")
+        numeric_df = data_with_clusters.select_dtypes(include=[np.number])
         descs, name_list = utils.clusters_analysis(data_with_clusters)
-        for i in range(0, data_with_clusters.shape[1] - 1):
+        for i in range(0, numeric_df.shape[1]):
             st.text(f"Description of {name_list[i]} across Clusters")
             descs[i]["count"] = pd.to_numeric(descs[i]["count"], errors="coerce")
             st.table(descs[i].sort_values(by="count", ascending=True).applymap(lambda x: f"{x:.2f}"))
@@ -449,9 +466,7 @@ if uploaded_file is not None:
             file_name="Data_with_Cluster.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
-        
-        tech = st.session_state['clustering_technique']
-        utils.tracking(st.session_state['data_with_clusters'], features, st.session_state['config'])
+        utils.tracking(features, st.session_state['config'], metrics)
     else:
         st.warning("No clustered data available to save. Please perform clustering first.")
         

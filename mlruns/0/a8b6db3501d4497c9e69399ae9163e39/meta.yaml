@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/a8b6db3501d4497c9e69399ae9163e39/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: a8b6db3501d4497c9e69399ae9163e39
+run_name: ambitious-fish-807
+run_uuid: a8b6db3501d4497c9e69399ae9163e39
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739723611454
+status: 1
+tags: []
+user_id: ai

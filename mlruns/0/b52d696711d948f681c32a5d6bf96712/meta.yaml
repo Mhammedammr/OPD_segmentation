@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/b52d696711d948f681c32a5d6bf96712/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b52d696711d948f681c32a5d6bf96712
+run_name: loud-turtle-882
+run_uuid: b52d696711d948f681c32a5d6bf96712
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739363609929
+status: 1
+tags: []
+user_id: ai

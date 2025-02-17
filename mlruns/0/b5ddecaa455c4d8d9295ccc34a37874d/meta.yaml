@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/b5ddecaa455c4d8d9295ccc34a37874d/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b5ddecaa455c4d8d9295ccc34a37874d
+run_name: unique-moth-650
+run_uuid: b5ddecaa455c4d8d9295ccc34a37874d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739723705025
+status: 1
+tags: []
+user_id: ai

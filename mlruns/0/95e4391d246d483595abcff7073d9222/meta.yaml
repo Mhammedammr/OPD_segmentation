@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/95e4391d246d483595abcff7073d9222/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 95e4391d246d483595abcff7073d9222
+run_name: judicious-roo-672
+run_uuid: 95e4391d246d483595abcff7073d9222
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739723704152
+status: 1
+tags: []
+user_id: ai

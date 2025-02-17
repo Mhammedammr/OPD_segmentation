@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/3deb04bd589b421aa1f20460606cc2f6/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 3deb04bd589b421aa1f20460606cc2f6
+run_name: overjoyed-quail-653
+run_uuid: 3deb04bd589b421aa1f20460606cc2f6
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739446584472
+status: 1
+tags: []
+user_id: ai

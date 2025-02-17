@@ -6,7 +6,11 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.cluster import KMeans, DBSCAN
 from sklearn.mixture import GaussianMixture
-from sklearn.metrics import silhouette_score
+from sklearn.metrics import (
+    calinski_harabasz_score,
+    silhouette_score,
+    davies_bouldin_score,
+)
 
 
 class Model:
@@ -104,11 +108,7 @@ class Model:
         # Handling different clustering algorithms
         if self.cfg["alg"] == "KMeans":
             clusters = self.pipeline.predict(X)
-        elif self.cfg["alg"] == "DBSCAN":
-            # DBSCAN uses fit_predict instead of predict
-            clusters = self.pipeline.named_steps['model'].fit_predict(
-                self.pipeline.named_steps['preprocessor'].transform(X)
-            )
+            
         elif self.cfg["alg"] == "GMM":
             clusters = self.pipeline.predict(X)
         
@@ -120,6 +120,28 @@ class Model:
         additional_info = {"best_k": self.best_k} if self.best_k else None
         
         return X_with_clusters, additional_info
+    
+    
+    def evaluate_clustering(self, X):
+        """Evaluate clustering performance using multiple metrics."""
+        # Preprocess the data
+        X_preprocessed = self.preprocessor.transform(X)
+        X_dense = X_preprocessed.toarray() if hasattr(X_preprocessed, 'toarray') else X_preprocessed
+
+        # Predict clusters
+        clusters = self.pipeline.predict(X)
+
+        # Calculate metrics
+        silhouette = silhouette_score(X_dense, clusters)
+        davies_bouldin = davies_bouldin_score(X_dense, clusters)
+        calinski_harabasz = calinski_harabasz_score(X_dense, clusters)
+
+        # Return metrics as a dictionary
+        return {
+            "silhouette_score": silhouette,
+            "davies_bouldin_index": davies_bouldin,
+            "calinski_harabasz_index": calinski_harabasz
+        }
 
 
 class ForceDenseTransformer:
