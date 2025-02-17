@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/07fb2ac38374452097cc4a2b917a16a3/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 07fb2ac38374452097cc4a2b917a16a3
+run_name: upbeat-mule-193
+run_uuid: 07fb2ac38374452097cc4a2b917a16a3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739447579973
+status: 1
+tags: []
+user_id: ai

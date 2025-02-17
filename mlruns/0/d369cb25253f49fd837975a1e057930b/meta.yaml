@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/d369cb25253f49fd837975a1e057930b/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: d369cb25253f49fd837975a1e057930b
+run_name: invincible-seal-178
+run_uuid: d369cb25253f49fd837975a1e057930b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739723597055
+status: 1
+tags: []
+user_id: ai

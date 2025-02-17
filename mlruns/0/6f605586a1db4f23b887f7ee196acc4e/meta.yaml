@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/6f605586a1db4f23b887f7ee196acc4e/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 6f605586a1db4f23b887f7ee196acc4e
+run_name: clumsy-calf-641
+run_uuid: 6f605586a1db4f23b887f7ee196acc4e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739446838243
+status: 1
+tags: []
+user_id: ai

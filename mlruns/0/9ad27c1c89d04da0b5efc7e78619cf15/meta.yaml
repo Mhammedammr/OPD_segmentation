@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/9ad27c1c89d04da0b5efc7e78619cf15/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 9ad27c1c89d04da0b5efc7e78619cf15
+run_name: wistful-kit-968
+run_uuid: 9ad27c1c89d04da0b5efc7e78619cf15
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739723703357
+status: 1
+tags: []
+user_id: ai

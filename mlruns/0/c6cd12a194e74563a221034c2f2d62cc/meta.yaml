@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/c6cd12a194e74563a221034c2f2d62cc/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: c6cd12a194e74563a221034c2f2d62cc
+run_name: lyrical-shrew-44
+run_uuid: c6cd12a194e74563a221034c2f2d62cc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739447564835
+status: 1
+tags: []
+user_id: ai

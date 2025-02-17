@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/muhammedamr/Desktop/AHBS/OPD_segmentation/mlruns/0/f430a009cd0d4ff284f92155fdb35a8f/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: f430a009cd0d4ff284f92155fdb35a8f
+run_name: abundant-lamb-29
+run_uuid: f430a009cd0d4ff284f92155fdb35a8f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739723612667
+status: 1
+tags: []
+user_id: ai
